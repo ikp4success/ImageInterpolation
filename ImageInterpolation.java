@@ -23,7 +23,7 @@ public class ImageInterpolation {
     
    public String ImageInterpolation(String imageLoc,int X, int Y) {
     	
-    	File outFile = new File("output.jpg");
+    	File outFile =null;
 	try {
 //	    Scanner input = new Scanner(System.in);
 //	    System.out.print("Please type a file path: ");
@@ -68,7 +68,7 @@ public class ImageInterpolation {
 		iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
 		iwp.setCompressionQuality(0.95f);
 		
-		
+		outFile = new File("output_1.jpg");
 		FileImageOutputStream output = new FileImageOutputStream(outFile);
 		writer.setOutput(output);
 		IIOImage image = new IIOImage(buffImage, null, null);
@@ -78,7 +78,7 @@ public class ImageInterpolation {
 	} catch (Throwable e) {
 	    e.printStackTrace();
 	}
-	return outFile.getName();
+	return outFile.getAbsolutePath();
     }
     
 }
