@@ -1,12 +1,11 @@
 package application;
-/**
-* NAMES: Immmanuel George, Graham Sullivan
-* CLASS: MTH 323
-* Final Project- Image Interpolation
-*/
+
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,17 +13,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+
 public class Main extends Application {
 	// private Desktop desktop = Desktop.getDesktop();
 	private ImageView imv = new ImageView();
 	private Image image;
+	
+	String imageLoc;
 
 	FileChooser fileChooser = new FileChooser();
 	File selectedImage;
@@ -36,18 +41,26 @@ public class Main extends Application {
 	TextField tf_X = new TextField();
 	TextField tf_Y = new TextField();
 	
-	RadioButton BICUBic = new RadioButton("Cubic Spline");
-	RadioButton CUBic = new RadioButton("Bi Cubic ");
+	
+	 ToggleGroup group = new ToggleGroup();
+	RadioButton BICUBic = new RadioButton("ImageInterpolate");
+	
+	RadioButton CUBic = new RadioButton("Bi Cubic");
+	
 
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Image Interpolation");
 		try {
+			
 			// BorderPane root =
 			// (BorderPane)FXMLLoader.load(getClass().getResource("img_interpolationframe.fxml"));
 			//
 			Pane pane = FXMLLoader.load(getClass().getResource(
 					"img_interpolationframe.fxml"));
+			BICUBic.setToggleGroup(group);
+			BICUBic.setSelected(true);
+			CUBic.setToggleGroup(group);
 
 			Browse.setLayoutX(5);
 			Browse.setLayoutY(2);
@@ -96,19 +109,21 @@ public class Main extends Application {
 				public void handle(final ActionEvent e) {
 					selectedImage = fileChooser.showOpenDialog(primaryStage);
 					if (selectedImage != null) {
-						String imageLoc = selectedImage.getName();
+						imageLoc = selectedImage.getName();
 						System.out.println(imageLoc);
 						// image = new
 						// Image(Main.class.getResourceAsStream(imageLoc));
 						
 						if (imageLoc.startsWith("file:")) {
 							image = new Image(imageLoc);
+							imv.setImage(image);
 						} else {
 							image = new Image(getClass().getResourceAsStream(
 									imageLoc));
+							imv.setImage(image);
 						}
 
-						imv.setImage(image);
+						
 
 					}
 
@@ -121,7 +136,40 @@ public class Main extends Application {
 			Execute.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(final ActionEvent e) {
-					//if redia button selected , use BI Cubical, cubic splines
+					int X = Integer.parseInt(tf_X.getText().toString());
+					int Y = Integer.parseInt(tf_Y.getText().toString());
+					//if radio button selected , use BI-Cubical, cubic splines
+					BufferedImage bimg = SwingFXUtils.fromFXImage(image, null);
+					BicubicInterpolator bicubi = new BicubicInterpolator();
+//					System.out.println(X +"" + Y);
+					double p[][] = ConvertImage2darray(bimg,X,Y);
+					double value_img = bicubi.getValue(p,X ,Y);
+					System.out.println("Test---  "+p);
+					try {
+						//convert2DTOImage(p, X, Y);
+						if(CUBic.isSelected()){
+						imv.setImage(convert2DTOImage(p, X, Y));
+//						System.out.println("IMAGE LOC-"+convert2DTOImage(p, X, Y));
+						}else if(BICUBic.isSelected()){
+							ImageInterpolation imgI = new ImageInterpolation();
+							if (imageLoc.startsWith("file:")) {
+								Image imgIII = new Image(imgI.ImageInterpolation(imageLoc,X,Y));
+								imv.setImage(imgIII);
+							} else {
+//								System.out.println("IMAGE LOC-"+imgI.ImageInterpolation(imageLoc,X,Y));
+								
+								Image imgIII = new Image(getClass().getResourceAsStream(
+										imgI.ImageInterpolation(imageLoc,X,Y)));
+								imv.setImage(imgIII);
+							}
+							
+							
+						}
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 				}
 			});
 
@@ -133,6 +181,64 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	public static double[][] ConvertImage2darray(BufferedImage image,int X,int Y){
+		 double[][] arr = new double[X][Y];
+		 
+		for(int i = 0; i < X; i++){
+		    for(int j = 0; j < Y; j++){
+		        arr[i][j] = image.getRGB(i, j);
+		       
+		    }
+		}
+		return arr;
+	}
+	
+	public WritableImage convert2DTOImage(double[][] cImg,int X, int Y) throws IOException{
+//		BufferedImage convimg = new BufferedImage(X, Y, 3);
+		WritableImage fConimg = null;
+//		 for(int y=0;y<cImg.length;y++){
+//		  for(int x=0;x<cImg[y].length;x++){
+//		       int Pixel=(int)cImg[x][y]<<16 | (int)cImg[x][y] << 8 | (int)cImg[x][y];
+//		       convimg.setRGB(x, y,Pixel);
+//		   }
+//
+//		 }
+//		int xLenght = cImg.length;
+//		int yLength = cImg[0].length;
+//		BufferedImage convimg = new BufferedImage(X, Y, 3);
+//
+//		for(int x = 0; x < xLenght; x++) {
+//		    for(int y = 0; yLength < Y; y++) {
+//		        int rgb = (int)cImg[x][y]<<16 | (int)cImg[x][y] << 8 | (int)cImg[x][y];
+//		        convimg.setRGB(x, y, rgb);
+//		    }
+//		}
+//		ImageIO.write(convimg, "Doublearray", new File("Doublearray.png"));
+		
+		//String path = "res/world/PNGLevel_" + "NAME" + ".png";
+	    BufferedImage convimg = new BufferedImage(X, Y, BufferedImage.TYPE_INT_RGB);
+	    for (int x = 0; x < 200; x++) {
+	        for (int y = 0; y < 200; y++) {
+	        	convimg.setRGB(x, y, (int)cImg[x][y]);
+	        }
+	    }
+
+	    File ImageFile = new File(imageLoc);
+	    try {
+	        ImageIO.write(convimg, "png", ImageFile);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+		
+		fConimg=SwingFXUtils.toFXImage(convimg, null);
+		return fConimg;
+	}
+	
+	
+	
+	
+	
 
 	// private String openFile(File file, Stage primaryStage) {
 	// String imageLoc ="";
