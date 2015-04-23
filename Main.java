@@ -18,8 +18,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -136,31 +139,37 @@ public class Main extends Application {
 			Execute.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(final ActionEvent e) {
-					int X = Integer.parseInt(tf_X.getText().toString());
-					int Y = Integer.parseInt(tf_Y.getText().toString());
+					int Y = Integer.parseInt(tf_X.getText().toString());
+					int X = Integer.parseInt(tf_Y.getText().toString());
 					//if radio button selected , use BI-Cubical, cubic splines
 					BufferedImage bimg = SwingFXUtils.fromFXImage(image, null);
 					BicubicInterpolator bicubi = new BicubicInterpolator();
 //					System.out.println(X +"" + Y);
-					double p[][] = ConvertImage2darray(bimg,X,Y);
-					double value_img = bicubi.getValue(p,X ,Y);
-					System.out.println("Test---  "+p);
+					
+					
+					
 					try {
 						//convert2DTOImage(p, X, Y);
 						if(CUBic.isSelected()){
+							double p[][] = ConvertImage2darray(bimg,X,Y);
+							double value_img = bicubi.getValue(p,X ,Y);
 						imv.setImage(convert2DTOImage(p, X, Y));
 //						System.out.println("IMAGE LOC-"+convert2DTOImage(p, X, Y));
 						}else if(BICUBic.isSelected()){
 							ImageInterpolation imgI = new ImageInterpolation();
 							if (imageLoc.startsWith("file:")) {
-								Image imgIII = new Image(imgI.ImageInterpolation(imageLoc,X,Y));
-								imv.setImage(imgIII);
+								Image imgIII = new Image(imgI.ImageInterpolation(selectedImage.getAbsolutePath(),X,Y));
+								//imv.setImage(imgIII);
 							} else {
 //								System.out.println("IMAGE LOC-"+imgI.ImageInterpolation(imageLoc,X,Y));
 								
-								Image imgIII = new Image(getClass().getResourceAsStream(
-										imgI.ImageInterpolation(imageLoc,X,Y)));
-								imv.setImage(imgIII);
+								 BufferedImage newSource = ImageIO.read(new File(imgI.ImageInterpolation(selectedImage.getAbsolutePath(),X,Y)));
+								Image newSourceImage=SwingFXUtils.toFXImage(newSource, null);
+								//imv.setImage(newSourceImage);
+//								Image imgIII = new Image(getClass().getResourceAsStream(
+//										imgI.ImageInterpolation(selectedImage.getAbsolutePath(),X,Y)));
+								popupWindow(primaryStage,X,Y,newSourceImage);
+								
 							}
 							
 							
@@ -233,6 +242,22 @@ public class Main extends Application {
 		
 		fConimg=SwingFXUtils.toFXImage(convimg, null);
 		return fConimg;
+	}
+	
+	public void popupWindow(Stage primaryStage,int X,int Y,Image newSourceImg){
+		 final Stage dialog = new Stage();
+		 ImageView imv = new ImageView();
+		 imv.setLayoutX(X);
+		 imv.setLayoutY(Y);
+         dialog.initModality(Modality.APPLICATION_MODAL);
+         dialog.initOwner(primaryStage);
+         VBox dialogVbox = new VBox(20);
+         dialogVbox.getChildren().add(imv);
+         
+         Scene dialogScene = new Scene(dialogVbox, X+10, Y+10);
+         dialog.setScene(dialogScene);
+         dialog.show();
+         imv.setImage(newSourceImg);
 	}
 	
 	
