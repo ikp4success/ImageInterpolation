@@ -62,8 +62,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		/*
-		 * Layout for GUI, includes text field, buttons, radio buttons and imageview
-		 * */
+		 * Layout for GUI, includes text field, buttons, radio buttons and
+		 * imageview
+		 */
 		primaryStage.setTitle("Image Interpolation");
 		try {
 
@@ -110,11 +111,11 @@ public class Main extends Application {
 			// new ExtensionFilter("Text Files", "*.txt"),
 					new ExtensionFilter("Image Files", "*.png", "*.jpg",
 							"*.gif")
-					//,
-					// new ExtensionFilter("Audio Files", "*.wav", "*.mp3",
-					// "*.aac"),
-					//new ExtensionFilter("All Files", "*.*")
-					);// handles only image extensions 
+			// ,
+			// new ExtensionFilter("Audio Files", "*.wav", "*.mp3",
+			// "*.aac"),
+			// new ExtensionFilter("All Files", "*.*")
+					);// handles only image extensions
 
 			pane.getChildren().addAll(Browse, Execute, imv, tf_X, tf_Y,
 					BICUBic, nearesNeighbour, BILinear);
@@ -128,8 +129,8 @@ public class Main extends Application {
 			Browse.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				/*
-				 *Browse button to get images  
-				 * */
+				 * Browse button to get images
+				 */
 				public void handle(final ActionEvent e) {
 					selectedImage = fileChooser.showOpenDialog(primaryStage);
 					if (selectedImage != null) {
@@ -168,18 +169,18 @@ public class Main extends Application {
 
 					try {
 						/*
-						 *if Radio button is selected perform the selected interpolation
-						 * */
+						 * if Radio button is selected perform the selected
+						 * interpolation
+						 */
 						// convert2DTOImage(p, X, Y);
 						if (BICUBic.isSelected()) {
-							
+
 							// double p[][] = ConvertImage2darray(bimg,X,Y);
 							// double value_img = bicubi.getValue(p,X ,Y);
 							// imv.setImage(convert2DTOImage(p, X, Y));
 							// System.out.println("IMAGE LOC-"+convert2DTOImage(p,
 							// X, Y));4
 
-							
 							if (imageLoc.startsWith("file:")) {
 								Image imgBI = new Image(
 										imgI.BICublicInterpolation(
@@ -187,47 +188,44 @@ public class Main extends Application {
 												X, Y));
 								imv.setImage(imgBI);
 							} else {
-								
 
 								BufferedImage newSourceBUFBI = ImageIO.read(new File(
 										imgI.BICublicInterpolation(
 												selectedImage.getAbsolutePath(),
 												X, Y)));
-								Image newSourceImageBI = SwingFXUtils.toFXImage(
-										newSourceBUFBI, null);
+								Image newSourceImageBI = SwingFXUtils
+										.toFXImage(newSourceBUFBI, null);
 								// imv.setImage(newSourceImage);
 								// Image imgIII = new
 								// Image(getClass().getResourceAsStream(
 								// imgI.ImageInterpolation(selectedImage.getAbsolutePath(),X,Y)));
-								popupWindow(primaryStage, X, Y, newSourceImageBI);
+								popupWindow(primaryStage, X, Y,
+										newSourceImageBI);
 
 							}
 
 						} else if (nearesNeighbour.isSelected()) {
-							
+
 							if (imageLoc.startsWith("file:")) {
-								Image imgNN = new Image(
-										imgI.NearestNeighbour(
-												selectedImage.getAbsolutePath(),
-												X, Y));
+								Image imgNN = new Image(imgI.NearestNeighbour(
+										selectedImage.getAbsolutePath(), X, Y));
 								imv.setImage(imgNN);
 							} else {
-								
 
 								BufferedImage newSourceBUFNN = ImageIO.read(new File(
 										imgI.NearestNeighbour(
 												selectedImage.getAbsolutePath(),
 												X, Y)));
-								Image newSourceImageNN = SwingFXUtils.toFXImage(
-										newSourceBUFNN, null);
-								
-								popupWindow(primaryStage, X, Y, newSourceImageNN);
+								Image newSourceImageNN = SwingFXUtils
+										.toFXImage(newSourceBUFNN, null);
+
+								popupWindow(primaryStage, X, Y,
+										newSourceImageNN);
 
 							}
 
-
 						} else if (BILinear.isSelected()) {
-							
+
 							if (imageLoc.startsWith("file:")) {
 								Image imgBL = new Image(
 										imgI.BILinearInterpolation(
@@ -235,19 +233,18 @@ public class Main extends Application {
 												X, Y));
 								imv.setImage(imgBL);
 							} else {
-								
 
 								BufferedImage newSourceBUFBL = ImageIO.read(new File(
 										imgI.BILinearInterpolation(
 												selectedImage.getAbsolutePath(),
 												X, Y)));
-								Image newSourceImageBL = SwingFXUtils.toFXImage(
-										newSourceBUFBL, null);
-								
-								popupWindow(primaryStage, X, Y, newSourceImageBL);
+								Image newSourceImageBL = SwingFXUtils
+										.toFXImage(newSourceBUFBL, null);
+
+								popupWindow(primaryStage, X, Y,
+										newSourceImageBL);
 
 							}
-
 
 						}
 					} catch (IOException e1) {
@@ -271,7 +268,8 @@ public class Main extends Application {
 		/*
 		 * Popup window with image
 		 * 
-		 * **/
+		 * *
+		 */
 		final Stage dialog = new Stage();
 		ImageView imv = new ImageView();
 		imv.setLayoutX(X);
