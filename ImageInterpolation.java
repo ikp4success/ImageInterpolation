@@ -21,7 +21,7 @@ import javax.imageio.stream.FileImageOutputStream;
  * Names/Authors: Immanuel I George , Graham Sullivan
  * Class: MTH311 (Numerical Analysis)
  * Final Project - Bi-Cubic Spline Image Interpolation
- * Objecttive - Generate Cubic Spline from one to two dimensions & Bi Cubic Interpolation algorithm
+ * Objective - Generate Cubic Spline from one to two dimensions & Bi Cubic Interpolation algorithm
  * 
  * */
 
