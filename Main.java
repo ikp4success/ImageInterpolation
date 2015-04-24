@@ -27,6 +27,15 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Names/Authors: Immanuel I George , Graham Sullivan
+ * Class: MTH311 (Numerical Analysis)
+ * Final Project - Bi-Cubic Spline Image Interpolation
+ * Objecttive - Generate Cubic Spline from one to two dimensions & Bi Cubic Interpolation algorithm
+ * 
+ * */
+
+
 public class Main extends Application {
 	// private Desktop desktop = Desktop.getDesktop();
 	private ImageView imv = new ImageView();
