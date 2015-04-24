@@ -1,6 +1,8 @@
 package application;
 
 import java.awt.Graphics2D;
+
+
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
@@ -15,6 +17,15 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
+
+
+/**
+ * Names/Authors: Immanuel I George , Graham Sullivan Class: MTH311 (Numerical
+ * Analysis) Final Project - Bi-Cubic Spline Image Interpolation Objective -
+ * Generate Cubic Spline from one to two dimensions & Bi Cubic Interpolation
+ * algorithm
+ * 
+ * */
 
 public class ImageInterpolation {
 	public ImageInterpolation() {
