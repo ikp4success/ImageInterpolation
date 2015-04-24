@@ -1,6 +1,6 @@
 package application;
 
-
+///THis CLASS WAS NEVER USED
 public class BicubicInterpolator extends CubicInterpolator
 {
 	private double[] arr = new double[4];
